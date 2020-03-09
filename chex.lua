@@ -1,104 +1,101 @@
+-- V2.1, 09.03.2020 06:48:18 +0300
+--
 -- This function for calculating file checksums with support full or relative
 -- UNC paths specified relative to the current panel directory, controlled
 -- recursive processing of directories, partial correction of input errors
 -- for UNC paths and checking the availability of the target object (the user
 -- may not have access rights to it). Also user can break calculation if pressed
--- ESC key. Symlink's today is not supported.
+-- ESC key.
 --
 -- Input parameters:
 --
 -- hn  - is hash algorithm name, string
 -- pth - target UNC path, string
+-- fh  - output path mode, false - Windows (default), true - UNIX, boolean;
 -- ft  - output record format code, false - GNU (default), true - BSD, boolean;
 -- r   - recursion flag true - enable, false - disable (default), boolean;
+-- sld - selection dir flag, boolean
 --
 -- Returned:
--- ret  - table included fields by order:
+--
+-- ret  - table included fields by order, handle:
 --
 -- DirSW      - Path to folder for save HashSumm, string;
--- FileAllCnt - files all count, integer;
--- FileErrCnt - files error count, integer;
--- RetCode    - Error code, integer, value is:
+-- FileCnt    - files processing count, integer;
+-- ErrCnt     - files error count, integer;
+-- RetCode    - Return code, integer, value is:
 --               0 - Success, no errors, HashSumm is valid;
---               1 - Target not exist;
---               2 - Recursion is disabled then target can't found;
---               3 - Access deinned, HashSum is valid for current FileAllCnt;
---               4 - Dir is empty;
---               5 - File size = 0, HashSum is valid for current FileAllCnt;
---               6 - User press break hotkey, HashSum is valid for current FileAllCnt;
+--               1 - Directory is empty;
+--               2 - Recursion is disabled and the specified object was not found;
+--               3 - File, access denied, HashSum valid for processed files;
+--               4 - Directory, access denied, HashSum valid for processed files;
+--               5 - Target not exist;
+--               6 - User press break hotkey, HashSum is valid for processed files;
 -- HashSumm  - calculated hashsum list, string
 --
-local function chex (pth,hn,ft,r)
-local ds,ec,fc,fe,fl,fz,pt,rt,s0 = "",0,0,0,4,0,"","","";
-local function diag (ipt,irt)
-local sz = tostring(win.GetFileInfo(ipt).FileSize)
- if sz == "0" then
-  ec = math.max(ec,5)
-  fz = fz + 1
- elseif sz == "nil" then
-  ec = math.max(ec,3)
-  fe = fe + 1
- end
-end;
- r = tostring(r)
- pth = tostring(pth)
- if r:find("true") then r = true else r = false end;
- ft = tostring(ft)
- if ft:find("true") then ft = true else ft = false end;
+local function chex (pth,hn,fh,ft,r,sld)
+local ds,ec,fc,fl,pt,rn,rt,s0 = "",0,0,4,"",0,"","";
+pth = tostring(pth)
+if tostring(r):find("true") then r = true else r = false end;
+if tostring(ft):find("true") then ft = true else ft = false end;
  if #mf.fsplit(pth,1) == 0 then
-  if not not pth:find("\\",1) then pth = pth:sub(2) elseif not not pth:find("/",1) then pth = pth:sub(2) end
+  if pth:find("\\",1,1) then pth = pth:sub(2) elseif pth:find("/",1,1) then pth = pth:sub(2) end
   pt = APanel.Path.."\\"..pth
  else
   pt = pth
  end
+ pt = mf.fsplit(pt,1)..mf.fsplit(pt,2)..mf.fsplit(pt,4)..mf.fsplit(pt,8)
  if mf.fexist(pth) then
-  local f = mf.testfolder(pt)
-  if f == 1 then
-   ec = 4
-   fe = 1
-  elseif f == 2 then
-   if r then fl = 6 else fl = 4 end;
-   far.RecursiveSearch(pt,"*>>D",function (itm,fp,hn,ft)
+  local f = mf.testfolder(pth)
+  if f == 2 then
+    local df = ""
+    if r then fl = 6 else fl = 4 end;
+    pt = pth
+    if sld then df = win.GetFileInfo(pt).FileName.."\\" else df = "" end
+     far.RecursiveSearch(""..pt.."","*>>D",function (itm,fp,hn,ft)
      rt = tostring(Plugin.SyncCall(ICId,"gethash",""..hn.."",""..fp.."",true));
      if rt == "userabort" then
-      ec = 6
-      return ec;
-     elseif rt == "false" then
-      diag(pt,rt)
+      rn = 6
+      return rn;
      else
-      local fn
-      fc = fc + 1
-      if not not fp:find(pt) then fn = fp:sub(#pt + 1) else fn = fp end
-      if fn:find("\\",1,1) then fn = fn:sub(2) end
-      if ft then s0 = s0..hn.." ("..fn..") = "..rt.."\n" else s0 = s0..rt.." *"..fn.."\n" end
-     end;
-   end,fl,hn,ft)
-   ds = pth
-  elseif f == -2 then
-   local obj = win.GetFileInfo(pt)
-    rt = tostring(Plugin.SyncCall(ICId,"gethash",""..hn.."",""..pth.."",true));
-    if rt == "userabort" then
-     ec = 6
-    elseif rt == "false" then
-     diag(pt,rt)
-    else
-     fc = 1
-     if ft then s0 = hn.." ("..obj.FileName..") = "..rt else s0 = rt.." *"..obj.FileName end;
-     ds = mf.trim(mf.fsplit(pth,1).."\\"..mf.fsplit(pth,2))
-    end
-   else
-    ec = 5
-    fz = 1
-   end
+      if rt ~= "false" and #rt ~= 0 then
+       fc = fc + 1
+       if fp:find("\\\\") then fp = fp:sub(#pt + 1) else fp = fp:sub(#pt + 2) end
+       fp = df..fp
+       if fh then fp = fp:gsub("\\","/") end
+       if ft then s0 = s0..hn.." ("..fp..") = "..rt.."\n" else s0 = s0..rt.." *"..fp.."\n" end
+      else
+       if f == -1 then
+        rn = math.max(rn,4)
+        ec = ec + 1
+       elseif #rt == 0 then
+        rn = math.max(rn,3)
+        ec = ec + 1
+       end
+      end
+     end
+    end,fl,hn,ft)
+    ds = pth
   else
-   if r then
-    ec = 1
-    fe = 1
-   else
-    ec = 2
-    fe = 1
+   local obj = win.GetFileInfo(pt)
+   if not not obj then
+    rt = tostring(Plugin.SyncCall(ICId,"gethash",""..hn.."",""..pt.."",true));
+    if rt == "userabort" then
+     rn = 6
+     ec = 1
+    else
+     if rt ~= "false" and #rt ~= 0 then
+      fc = 1
+      if ft then s0 = hn.." ("..obj.FileName..") = "..rt else s0 = rt.." *"..obj.FileName end;
+      ds = pt:sub(1,#pt - #obj.FileName - 1)
+     elseif #rt == 0 then
+      rn = 3
+      ec = 1
+     end
+    end
    end
   end
- local ret = {RetCode = ec, FileAllCnt = fc, FileErrCnt = fe, FileEmpCnt = fz, HashSumm = mf.trim(s0), DirSW = ds }
+ end
+ local ret = {RetCode = rn, FileCnt = fc, ErrCnt = ec, HashSumm = mf.trim(s0), DirSW = ds }
  return ret
 end;
