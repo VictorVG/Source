@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 1900-01-01 00:00+0000\n"
-"PO-Revision-Date: 2020-07-11 14:00:52 +0300\n"
+"PO-Revision-Date: 2020-09-12 21:12:26 +0300\n"
 "Last-Translator: VictorVG\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -62,11 +62,23 @@ msgstr "..."
 msgid "/"
 msgstr "/"
 
+#. Resource IDs: (1045)
+msgid "<a href=\"https://tools.stefankueng.com\">Visit our website</a>"
+msgstr "<a href=\"https://tools.stefankueng.com\">Перейти на сайт</a>"
+
+#. Resource IDs: (1052)
+msgid "<a>about grepWin</a>"
+msgstr "<a>О grepWin</a>"
+
+#. Resource IDs: (1055)
+msgid "<a>start new grepWin window</a>"
+msgstr "<a>Открыть новое окно grepWin</a>"
+
 #. Resource IDs: (1086)
 msgid ">"
 msgstr ">"
 
-#. Resource IDs: (1052, 135)
+#. Resource IDs: (135)
 msgid "About grepWin"
 msgstr "О grepWin"
 
@@ -141,11 +153,11 @@ msgstr "Копировать результаты в буфер обмена"
 
 #. Resource IDs: (1029)
 msgid "Create backup files"
-msgstr "Создавать резервные копии файлов"
+msgstr "Создавать резервные копии"
 
 #. Resource IDs: (1077)
 msgid "Create backup files in a separate folder"
-msgstr "Создавать резервные копии файлов в отдельной папке"
+msgstr "Создавать резервные копии в отдельной папке"
 
 #. Resource IDs: (1064)
 msgid "Dark mode"
@@ -209,7 +221,7 @@ msgstr ".рсш"
 
 #. Resource IDs: (1039)
 msgid "File Names match:\nuse '|' to separate multiple text match patterns, prepen&d '-' to exclude"
-msgstr "Сравнение имен файлов:\nиспользуйте '|' для разделения нескольких шаблонов, '-' для исключения"
+msgstr "Сравнение имен файлов:\nиспользуйте '|' для разделения нескольких &шаблонов, '-' для исключения"
 
 #. Resource IDs: (1059)
 msgid "Files"
@@ -465,10 +477,6 @@ msgstr "Файлы как UTF-8"
 msgid "Treat files as binary"
 msgstr "Считать файлы двоичными"
 
-#. Resource IDs: (1045)
-msgid "Visit our website"
-msgstr "Посетить сайт"
-
 #. Resource IDs: (116)
 msgid "a regular expression used for searching. Press F1 for more info."
 msgstr "Регулярные выражения для поиска. Нажмите F1 для справки."
@@ -504,7 +512,7 @@ msgstr "grepWin"
 #. Resource IDs: (168)
 #, c-format
 msgid "grepWin %s is available"
-msgstr "grepWin %s дступна"
+msgstr "grepWin %s доступна"
 
 #. Resource IDs: (138)
 msgid "grepWin Settings"
@@ -548,7 +556,7 @@ msgstr "нет текста для тестирования"
 
 #. Resource IDs: (1074)
 msgid "number of NULL bytes per MB allowed for a file to still be considered text instead of binary"
-msgstr "количество допустимых NULL-байтов на МБ для файла который считается текстовым, а не двоичным"
+msgstr "количество допустимых NULL-байт на МБ для файла который считается текстовым, а не двоичным"
 
 #. Resource IDs: (112)
 msgid "only files that match this pattern are searched.\r\nUse \"|\" as the delimiter.\r\nExample: *.cpp|*.h"
@@ -574,6 +582,10 @@ msgstr "Поиск файлов '%s'"
 #. Resource IDs: (108)
 msgid "search string is empty"
 msgstr "Строка поиска пуста"
+
+#. Resource IDs: (170)
+msgid "start new grepWin window"
+msgstr "Открыть новое окно grepWin"
 
 #. Resource IDs: (114)
 msgid "the path(s) which is searched recursively.\r\nSeparate paths with the | symbol.\r\nExample: c:\\temp|d:\\logs"
