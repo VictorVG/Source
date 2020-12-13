@@ -1,0 +1,27 @@
+    diff --git a/advcmp3/SRC/AdvCmpDlgOpt.cpp b/advcmp3/SRC/AdvCmpDlgOpt.cpp
+    index 4233591..2ae71a2 100644
+    --- a/advcmp3/SRC/AdvCmpDlgOpt.cpp
+    +++ b/advcmp3/SRC/AdvCmpDlgOpt.cpp
+    @@ -188,7 +188,7 @@ void AdvCmpDlgOpt::Close()
+        if (Opt.Substr) { free(Opt.Substr); Opt.Substr=NULL; }
+        if (Opt.WinMergePath) { free(Opt.WinMergePath); Opt.WinMergePath=NULL; }
+        if (Opt.DupPath) { free(Opt.DupPath); Opt.DupPath=NULL; }
+    -   Info.FileFilterControl(Opt.hCustomFilter,FFCTL_FREEFILEFILTER,0,0);
+    +   if (Opt.Filter) Info.FileFilterControl(Opt.hCustomFilter,FFCTL_FREEFILEFILTER,0,0);
+     }
+
+     intptr_t WINAPI AdvCmpDlgOpt::ShowOptDialogProc(HANDLE hDlg, intptr_t Msg, intptr_t Param1, void *Param2)
+
+    diff --git a/advcmp3/SRC/AdvCmpProc.cpp b/advcmp3/SRC/AdvCmpProc.cpp
+    index 4233591..2ae71a2 100644
+    --- a/advcmp3/SRC/AdvCmpProc.cpp
+    +++ b/advcmp3/SRC/AdvCmpProc.cpp
+    @@ -343,7 +343,7 @@ void AdvCmpProc::Init()
+        Info.FileFilterControl(RPanel.hPanel,FFCTL_CREATEFILEFILTER,FFT_PANEL,&RPanel.hFilter);
+        Info.FileFilterControl(LPanel.hFilter,FFCTL_STARTINGTOFILTER,0,0);
+        Info.FileFilterControl(RPanel.hFilter,FFCTL_STARTINGTOFILTER,0,0);
+    -   Info.FileFilterControl(Opt.hCustomFilter,FFCTL_STARTINGTOFILTER,0,0);
+    +   if (Opt.Filter) Info.FileFilterControl(Opt.hCustomFilter,FFCTL_STARTINGTOFILTER,0,0);
+
+        // На время сравнения изменим заголовок консоли ФАРа...
+        TitleSaved=GetFarTitle(strFarTitle);
