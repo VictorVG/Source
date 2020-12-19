@@ -413,7 +413,7 @@ bool LoadBASS(wchar_t *PlugPath)
 			pBASS_ChannelGetData=(PBASS_CHANNELGETDATA)GetProcAddress(BASSHandle,"BASS_ChannelGetData");
 
 		if (!pBASS_GetVersion || !pBASS_SetConfig || !pBASS_Init || !pBASS_Free || !pBASS_StreamCreateFile || !pBASS_StreamFree || !pBASS_GetDeviceInfo ||
-				!pBASS_ChannelGetLength || !pBASS_ChannelBytes2Seconds || !pBASS_ChannelGetInfo || !pBASS_ChannelGetTags || !pBASS_StreamGetFilePosition || 
+				!pBASS_ChannelGetLength || !pBASS_ChannelBytes2Seconds || !pBASS_ChannelGetInfo || !pBASS_ChannelGetTags || !pBASS_StreamGetFilePosition ||
 				!pBASS_ChannelIsActive || !pBASS_ChannelGetData)
 		{
 			FreeLibrary(BASSHandle);
@@ -447,7 +447,7 @@ void WINAPI GetGlobalInfoW(struct GlobalInfo *pInfo)
 {
 	pInfo->StructSize=sizeof(GlobalInfo);
 	pInfo->MinFarVersion=FARMANAGERVERSION;
-	pInfo->Version=MAKEFARVERSION(3,0,0,36,VS_RC);
+	pInfo->Version=MAKEFARVERSION(3,0,0,37,VS_RC);
 	pInfo->Guid=MainGuid;
 	pInfo->Title=L"AdvCmpEx";
 	pInfo->Description=L"Advanced compare files plugin for Far Manager v3.0";
