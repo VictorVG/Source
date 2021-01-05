@@ -58,7 +58,7 @@ wchar_t *CutSubstr(string &strSrc, wchar_t *Substr)
 		if (!Info.RegExpControl(0,RECTL_CREATE,0,&re)) return false;
 
 		string Search=L"/";
-		if (len>0 && Substr[0]==L'/')
+		if (len>0 && Substr[0]==L'/') 
 			Search+=Substr+1;
 		else Search+=Substr;
 		if (Search.length()>0 && Search[(size_t)(Search.length()-1)]!=L'/')
@@ -503,7 +503,7 @@ int AdvCmpProc::GetDirList(const wchar_t *Dir, int ScanDepth, bool OnlyInfo, str
 		{
 			// получим реальный путь
 			size_t size=FSF.ConvertPath(CPM_REAL,Dir,0,0);
-			wchar_t *buf=strPathMask.get(size);
+			wchar_t *buf=strPathMask.get(size); 
 			FSF.ConvertPath(CPM_REAL,Dir,buf,size);
 			strPathMask.updsize();
 			// проверка на рекурсию - узнаем, может мы уже отсюда пришли
@@ -656,7 +656,7 @@ bool AdvCmpProc::BuildItemsIndex(bool bLeftPanel,const struct DirList *pList,str
 			 )
 		{
 			if ( (pList->PPI[i].FileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
-					 ((pList->PPI[i].FileName[0]==L'.' && !pList->PPI[i].FileName[1]) ||
+					 ((pList->PPI[i].FileName[0]==L'.' && !pList->PPI[i].FileName[1]) || 
 					 (pList->PPI[i].FileName[0]==L'.' && pList->PPI[i].FileName[1]==L'.' && !pList->PPI[i].FileName[2]))
 					)
 				continue;
@@ -1356,7 +1356,7 @@ bool AdvCmpProc::CompareFiles(const wchar_t *LDir, const PluginPanelItem *pLPPI,
 						// читаем блоком Opt.BufSize
 						while (LBufPos < (unsigned)Opt.BufSize)
 						{
-							if (CheckForEsc() ||
+							if (CheckForEsc() || 
 									!ReadFile(hLFile,Opt.Buf[0]+LBufPos,(!bPartlyKb || bFromEnd || LFilePos+ReadBlock<=PartlyKbSize)?ReadBlock:(PartlyKbSize-LFilePos),&LReadSize,0))
 							{
 								bEqual=false;
@@ -1381,7 +1381,7 @@ bool AdvCmpProc::CompareFiles(const wchar_t *LDir, const PluginPanelItem *pLPPI,
 						// читаем блоком Opt.BufSize
 						while (RBufPos < (unsigned)Opt.BufSize)
 						{
-							if (CheckForEsc() ||
+							if (CheckForEsc() || 
 									!ReadFile(hRFile,Opt.Buf[1]+RBufPos,(!bPartlyKb || bFromEnd || RFilePos+ReadBlock<=PartlyKbSize)?ReadBlock:(PartlyKbSize-RFilePos),&RReadSize,0))
 							{
 								bEqual=false;
@@ -2237,7 +2237,7 @@ intptr_t WINAPI ShowCmpCurDialogProc(HANDLE hDlg,intptr_t Msg,intptr_t Param1,vo
             }
             return TRUE;
         }
-      }
+      } 
       break;
 */
 	}
@@ -2308,7 +2308,7 @@ int AdvCmpProc::ShowCmpCurDialog(const PluginPanelItem *pLPPI,const PluginPanelI
 		Info.DialogFree(hDlg);
 	}
 
-	if (VirtualBuffer)
+	if (VirtualBuffer) 
 		free(VirtualBuffer);
 
 	return true;
