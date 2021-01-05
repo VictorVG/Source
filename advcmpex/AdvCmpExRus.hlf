@@ -1,9 +1,9 @@
 ﻿.Language=Russian,Russian (Русский)
-.PluginContents=AdvCmpEx
+.PluginContents=AdvCmp
 
 @Contents
-$^ #AdvCmpEx#
-$^ #3.0 build 35#
+$^ #Расширенное сравнение файлов#
+$^ #3.0 build 37#
 $^ #Copyright (C) 2006 Alexey Samlyukov#
 
     Этот плагин аналогичен встроенной команде Far Manager "Сравнение папок", но также

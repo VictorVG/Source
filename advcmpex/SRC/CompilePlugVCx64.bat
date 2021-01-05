@@ -89,6 +89,7 @@ cd ".."
 if not exist x64 md x64>nul
 copy /y /b AdvCmpEx*.* .\x64>nul
 copy /y /b *.txt .\x64>nul
+copy /y /b README.md .\x64>nul
 if exist %PlugName%.dll del %PlugName%.dll>nul
 if exist %PlugName%.map del %PlugName%.map>nul
 
