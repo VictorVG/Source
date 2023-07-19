@@ -77,8 +77,10 @@
 -- 12.11.2019 22:57:42 +0300
 -- v1.9.1 - "Integrity Checker: calculate hash for ..." обработка нажатия ESC, уточнение v1.9
 -- 27.01.2020 02:59:44 +0300
--- v2.0 - chex() v2.1, пути в стиле Windows/UNIX, новая диагностика ошибок, требует IntChecker v2.80, рефакторинг
+-- v2.0 - chex() v2.1, пути в стиле Windows/UNIX, новая диагностика ошибок, требует IntChecker v2.8.0, рефакторинг
 -- 09.03.2020 06:50:43 +0300
+-- v2.0.1 - chex() v2.1.1, уточнение формата хэшей в стиле UNIX для SHA256/SHA512, требует IntChecker v2.8.2 и новее
+-- 19.07.2023 09:03:19 +0300
 --
 local ICId,ICMID = "E186306E-3B0D-48C1-9668-ED7CF64C0E65","A22F9043-C94A-4037-845C-26ED67E843D1";
 local Mask = "/.+\\.(md5|sfv|sha(1|3|256|512)|wrpl)/i";
@@ -137,7 +139,13 @@ if tostring(ft):find("true") then ft = true else ft = false end;
     else
      if rt ~= "false" and #rt ~= 0 then
       fc = 1
-      if ft then s0 = hn.." ("..obj.FileName..") = "..rt else s0 = rt.." *"..obj.FileName end;
+      if ft then
+       local aa = hn;
+        if hn == "SHA-256" then aa = "SHA256" elseif hn == "SHA-512" then aa = "SHA512" end;
+        s0 = aa.." ("..obj.FileName..") = "..rt
+      else
+       s0 = rt.." *"..obj.FileName
+      end;
       ds = pt:sub(1,#pt - #obj.FileName - 1)
      elseif #rt == 0 then
       rn = 3
