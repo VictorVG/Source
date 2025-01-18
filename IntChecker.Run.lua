@@ -81,7 +81,12 @@
 -- 09.03.2020 06:50:43 +0300
 -- v2.0.1 - chex() v2.1.1, уточнение формата хэшей в стиле UNIX для SHA256/SHA512, требует IntChecker v2.8.2 и новее
 -- 19.07.2023 09:03:19 +0300
---
+-- v2.0.2 - косметика в тексте сообщений. Спасибо MXPHunter за помощь.
+-- 15.01.2025 11:32:43 +0300
+-- v2.0.3 - для предотвращения ошибок проверим наличие IntChecker-а.
+-- 17.01.2025 10:07:56 +0300
+-- 
+
 local ICId,ICMID = "E186306E-3B0D-48C1-9668-ED7CF64C0E65","A22F9043-C94A-4037-845C-26ED67E843D1";
 local Mask = "/.+\\.(md5|sfv|sha(1|3|256|512)|wrpl)/i";
 local MsB,MsF = Mouse.Button,Mouse.EventFlags;
@@ -163,7 +168,8 @@ Macro{
   id = "C7BD288F-E03F-44F1-8E43-DC7BC7CBE4BA";
   area = "Shell";
   key = "Enter NumEnter MsM1Click";
-  description = "Integrity Checker: check integrity use check summ";
+  condition = function() return Plugin.Exist(ICId) end;
+  description = "Integrity Checker: check integrity using check summ";
   priority = 60;
   flags = "EnableOutput";
   condition = function() return (mf.fmatch(APanel.Current,Mask)==1 and not (MsB==0x0001 and MsF==0x0001)) end;
@@ -185,6 +191,7 @@ Macro{
   area = "Shell";
   key = "AltH";
   priority = 50;
+  condition = function() return Plugin.Exist(ICId) end;
   description = "Integrity Checker: show menu";
   action = function()
     Far.DisableHistory(-1) Plugin.Menu(ICId,ICMID)
@@ -197,7 +204,7 @@ Macro{
   key = "AltG";
   description = "Integrity Checker: calculate hash for ...";
   priority = 50;
-  condition = function() return not APanel.Plugin end;
+  condition = function() return not APanel.Plugin and Plugin.Exist(ICId) end;
   action = function()
    local arg , ext , fmt , hs , rc , tg, ofm = 2 , ".md5" , false , "MD5" , false , "" , false;
    arg = mf.prompt("1:CRC32;2:MD5;3:SHA1;4:SHA-256;5:SHA-512;6:SHA3-512;7:Whirlpool",nil,1,nil);
@@ -286,11 +293,11 @@ Macro{
          if APanel.Selected then sgn = true else sgn = false end
         end
        else
-        if far.Message("Pressed ESC button. Save result to current dir?","Question:",";OkCancel","w") == 1 then
+        if far.Message("ESC button pressed. Save result to current dir?","Question:",";OkCancel","w") == 1 then
          name = APanel.Current
         else
          tg = "c"
-         far.Message("Result mast copy to clipboard","Information:","OK")
+         far.Message("Result mast be copied in to clipboard","Information:","OK")
         end;
        end;
       else
@@ -328,16 +335,16 @@ Macro{
         far.Message("Recursion is disabled then UNC patch\n\n"..name.."\n\nnot found.","IntChecker: error!","OK","lw")
        end
        if stat == 3 then
-        far.Message("For some files access denied, skiped.", "IntChecker: warning!", "OK")
+        far.Message("For some files access denied, skipped.", "IntChecker: warning!", "OK")
        elseif stat == 4 then
-        far.Message("For some directory access denied, skiped.", "IntChecker: warning!", "OK")
+        far.Message("For some directory access denied, skipped.", "IntChecker: warning!", "OK")
        end
        if stat == 5 then
-        far.Message("Some dir is empty, skiped.", "IntChecker: warning!", "OK")
+        far.Message("Some dir is empty, skipped.", "IntChecker: warning!", "OK")
        end
        if stat == 6 then
         sem = false
-        far.Message( "User put Cancel command.", "IntChecker: user cancel", "OK", "lw" )
+        far.Message( "User pressed Cancel button.", "IntChecker: user cancel", "OK", "lw" )
        end
       end
       if sem then
@@ -357,7 +364,7 @@ Macro{
          sum:flush();
          sum:close();
         else
-         local dMsg="Can\'t write hash to file. Do your like copy it to clipboard?\nAlso hash is be show on screen.";
+         local dMsg="Can\'t write hash to file. Do you want to copy it to clipboard?\nAlso hash is show on screen.";
          if far.Message(dMsg,"Can\'t write hash file",";OkCancel","w",nil,nil) == 1 then
           cbs=mf.clip(5,1);
           mf.clip(suma);
